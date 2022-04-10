@@ -1,0 +1,12 @@
+version: '3.9'
+
+services:
+  php-fpm:
+    environment:
+      - DATABASE_URL=mysql://root:secret@mysql_lib:3306/lib_db?serverVersion=8
+      - APP_ENV=dev
+    container_name: php_fpm_${CI_PROJECT_NAME}_dev_lib
+
+  nginx:
+    container_name: nginx_${CI_PROJECT_NAME}_dev_lib
+
