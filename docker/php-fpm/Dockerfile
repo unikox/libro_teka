@@ -32,7 +32,7 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www
 
-CMD composer install ;php bin/console doctrine:migrations:migrate -n; php bin/console cache:clear; rm -rf /var/www/var/cache/*; chmod -R 777 /var/www/var/; php-fpm ;
+CMD composer install ;php bin/console doctrine:migrations:migrate -n; php bin/console cache:clear; rm -rf /var/www/var/cache/*; chmod -R 777 /var/www/var/touch  /usr/local/etc/php/xdebug.log ;chmod 777 /usr/local/etc/php/xdebug.log; php-fpm ;
 
 
 EXPOSE 9000

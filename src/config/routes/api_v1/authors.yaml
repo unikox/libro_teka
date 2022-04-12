@@ -1,0 +1,41 @@
+#CRUD операци для книг
+
+#Создать автора
+v1.author_create.post:
+  path: /api/v1/author/create
+  methods: POST
+  controller: App\Controller\ApiAuthorController::Create
+  defaults:
+    _format: json
+
+#Получить сведения  об авторе
+v1.author_read.get:
+  path: /api/v1/author/read/{author_id}
+  methods:  GET
+  controller: App\Controller\ApiAuthorController::Read
+  defaults:
+    _format:  json
+
+#Изменить сведения  об авторе
+v1.author_update.put:
+ path: /api/v1/author/update
+ methods:  PUT
+ controller: App\Controller\ApiAuthorController::Update
+ defaults:
+    _format:  json
+
+#Удалить автора
+v1.author_delete.delete:
+  path: /api/v1/author/delete
+  methods:  DELETE
+  controller: App\Controller\ApiAuthorController::Delete
+  defaults:
+    _format:  json        
+
+#Искать автора
+v1.author_search.post:
+  path: /api/v1/author/search
+  methods:  POST
+  controller: App\Controller\ApiAuthorController::Search
+  defaults:
+    _format:  json

@@ -1,0 +1,41 @@
+#CRUD операци для книг
+
+#Создать книгу
+v1.book_create.post:
+    path: /api/v1/book/create
+    methods:  POST
+    controller: App\Controller\ApiBookController::Create
+    defaults:
+        _format:  json
+
+#Получить сведения  о книге
+v1.book_read.get:
+    path: /api/v1/book/read/{book_id}
+    methods:  GET
+    controller: App\Controller\ApiBookController::Read
+    defaults:
+        _format:  json
+
+#Изменить сведения  о книге
+v1.book_update.put:
+    path: /api/v1/book/update
+    methods:  PUT
+    controller: App\Controller\ApiBookController::Update
+    defaults:
+        _format:  json
+
+#Удалить книгу
+v1.book_delete.delete:
+    path: /api/v1/book/delete
+    methods:  DELETE
+    controller: App\Controller\ApiBookController::Delete
+    defaults:
+        _format:  json        
+
+#Искать книгу
+v1.book_search.get:
+    path: /api/v1/book/search&text={search_body}
+    methods:  GET
+    controller: App\Controller\ApiBookController::Search
+    defaults:
+        _format:  json
