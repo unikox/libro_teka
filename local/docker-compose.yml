@@ -42,6 +42,6 @@ services:
       MYSQL_USER: symfony
       MYSQL_PASSWORD: symfony
     ports:
-      - '4306:3306'
+      - '5306:3306'
     volumes:
       - ./mysql:/var/lib/mysql
