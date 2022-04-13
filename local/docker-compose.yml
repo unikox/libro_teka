@@ -13,6 +13,8 @@ services:
       - ../src:/var/www
       - ../data/lib/uploads:/var/www/public/uploads
       - ./xdebug.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+    depends_on:
+      - mysql_lib
   nginx_lib:
     build:
       context: ../docker/nginx
@@ -28,7 +30,6 @@ services:
     restart: unless-stopped
     depends_on:
       - php_fpm_lib
-      - mysql_lib
     ports:
       - "4499:443"
 
