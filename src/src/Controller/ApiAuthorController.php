@@ -49,23 +49,27 @@ class ApiAuthorController extends BaseController
 
     public function Create(EntityManagerInterface $em, AuthorService $authorService): JsonResponse
     {
-
         $data = $this->getRequestJSON();
         $response = new JsonResponse();
-        $authorService->setOperation('create');
-        //Валидация 
-        $validate = $authorService->Validate($response, $data);
-        if ($validate['res']) {
-            unset($validate);
-            //Проверка на уникальность и запись в бд
-            $create = $authorService->Create($em, $response, $data);
-            if ($create['res']) {
-                $response->setStatusCode(200);
-                $response->setData(['message' => 'Success']);
+        if (array_key_exists('name', $data) and array_key_exists('name', $data) and array_key_exists('middlename', $data) and array_key_exists('surname', $data)) {
+            $authorService->setOperation('create');
+            //Валидация 
+            $validate = $authorService->Validate($response, $data);
+            if ($validate['res']) {
+                unset($validate);
+                //Проверка на уникальность и запись в бд
+                $create = $authorService->Create($em, $response, $data);
+                if ($create['res']) {
+                    $response->setStatusCode(200);
+                    $response->setData(['message' => 'Success']);
+                }
+                return $create['response'];
+            } else {
+                return $validate['response'];
             }
-            return $create['response'];
         } else {
-            return $validate['response'];
+            $response->setStatusCode(422);
+            $response->setData(['message' => 'Not enough parameters']);
         }
         return $response;
     }
@@ -108,18 +112,23 @@ class ApiAuthorController extends BaseController
         $data = $this->getRequestJSON();
         $response = new JsonResponse();
         //Валидация 
-        $authorService->setOperation('update');
-        $validate = $authorService->Validate($response, $data);
-        if ($validate['res']) {
-            //Проверка на уникальность и запись в бд
-            $update = $authorService->Update($em, $response, $data);
-            if ($update['res']) {
-                $response->setStatusCode(200);
-                $response->setData(['message' => 'Success']);
+        if (array_key_exists('id', $data) and array_key_exists('name', $data) and array_key_exists('name', $data) and array_key_exists('middlename', $data) and array_key_exists('surname', $data)) {
+            $authorService->setOperation('update');
+            $validate = $authorService->Validate($response, $data);
+            if ($validate['res']) {
+                //Проверка на уникальность и запись в бд
+                $update = $authorService->Update($em, $response, $data);
+                if ($update['res']) {
+                    $response->setStatusCode(200);
+                    $response->setData(['message' => 'Success']);
+                }
+                return $update['response'];
+            } else {
+                return $validate['response'];
             }
-            return $update['response'];
         } else {
-            return $validate['response'];
+            $response->setStatusCode(422);
+            $response->setData(['message' => 'Not enough parameters']);
         }
 
         return $response;
@@ -189,20 +198,24 @@ class ApiAuthorController extends BaseController
     {
         $response = new JsonResponse();
         $data = $this->getRequestJSON();
-        //Валидация 
-        $authorService->setOperation('delete');
-        $validate = $authorService->Validate($response, $data);
-        if ($validate['res']) {
-            $delete = $authorService->Delete($em, $response, $data);
-            if ($delete['res']) {
-                $response->setStatusCode(200);
-                $response->setData(['message' => 'Success']);
+        if (array_key_exists('id', $data)) {
+            //Валидация 
+            $authorService->setOperation('delete');
+            $validate = $authorService->Validate($response, $data);
+            if ($validate['res']) {
+                $delete = $authorService->Delete($em, $response, $data);
+                if ($delete['res']) {
+                    $response->setStatusCode(200);
+                    $response->setData(['message' => 'Success']);
+                }
+                return $delete['response'];
+            } else {
+                return $validate['response'];
             }
-            return $delete['response'];
         } else {
-            return $validate['response'];
+            $response->setStatusCode(422);
+            $response->setData(['message' => 'Not enough parameters']);
         }
-
         return $response;
     }
 }
