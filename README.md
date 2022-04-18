@@ -27,6 +27,12 @@ Symfony 5.x API Library (demo)
                 user:root 
                 password:secret
 
+Тестирование
+    Заходим в контейнер
+        docker exec -it php_fpm_lib /bin/sh
+    Запускаем тестирование
+        php bin/phpunit
+
 Отладка
     Данный проект сконфигурирован на использование Xdebug и VSCode
         в VScode используется расширение PHP Debug v1.26.0

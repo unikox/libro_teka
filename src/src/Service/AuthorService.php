@@ -8,8 +8,9 @@ use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Type;
 use Symfony\Component\Validator\Validation;
+use App\Interfaces\CrudInterface;
 
-class AuthorService
+class AuthorService implements CrudInterface
 {
     private $operation;
     public function Validate($response, $data): array
@@ -242,7 +243,7 @@ class AuthorService
             return true;
         }
     }
-    public function Create($em, $response, $data)
+    public function Create($em, $response, $data): array
     {
         $chek_unique = $this->CheckUnique($em, $response, $data);
         if ($chek_unique['res']) {
@@ -255,7 +256,7 @@ class AuthorService
             return $chek_unique;
         }
     }
-    public function Read($em, $response, $data)
+    public function Read($em, $response, $data): array
     {
         if (!is_null($data) and is_object($data)) {
             $authorId =  $data->get('author_id');
@@ -279,7 +280,7 @@ class AuthorService
             return $result;
         }
     }
-    public function Update($em, $response, $data)
+    public function Update($em, $response, $data): array
     {
         $chek_unique = $this->CheckUnique($em, $response, $data);
         if ($chek_unique['res']) {
@@ -292,7 +293,7 @@ class AuthorService
             return $chek_unique;
         }
     }
-    public function Delete($em, $response, $data)
+    public function Delete($em, $response, $data): array
     {
         $check_exist_books = $this->CheckExistBooks($em, $response, $data);
         if ($check_exist_books['res']) {

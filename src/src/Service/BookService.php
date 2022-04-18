@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+
 use App\Entity\Author;
 use App\Entity\Book;
 use Symfony\Component\Serializer\Encoder\JsonEncode;
@@ -10,9 +11,13 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Type;
 use Symfony\Component\Validator\Validation;
 
-class BookService
+use App\Interfaces\CrudInterface;
+
+
+class BookService implements CrudInterface
 {
     private $operation;
+
     public function Validate($response, $data): array
     {
         $res = false;
@@ -220,7 +225,7 @@ class BookService
             return true;
         }
     }
-    public function Create($em, $response, $data)
+    public function Create($em, $response, $data): array
     {
         $chek_unique = $this->CheckUnique($em, $response, $data);
         if ($chek_unique['res']) {
@@ -239,7 +244,7 @@ class BookService
             return $chek_unique;
         }
     }
-    public function Read($em, $response, $data)
+    public function Read($em, $response, $data): array
     {
         if (!is_null($data) and is_object($data)) {
             $bookId =  $data->get('book_id');
@@ -264,7 +269,7 @@ class BookService
             return $result;
         }
     }
-    public function Update($em, $response, $data)
+    public function Update($em, $response, $data): array
     {
         $chek_unique = $this->CheckUnique($em, $response, $data);
         if ($chek_unique['res']) {
@@ -282,7 +287,7 @@ class BookService
             return $chek_unique;
         }
     }
-    public function Delete($em, $response, $data)
+    public function Delete($em, $response, $data): array
     {
         $check_exist_books = $this->CheckExistAuthor($em, $response, $data);
         if ($check_exist_books['res']) {
