@@ -1,10 +1,11 @@
 # libro_teka
 Symfony 5.x API Library (demo)
 
-Для установки и запуска вам потребуется Docker
+Demo API
 -------------------
 ```
 Установка
+    Для установки и запуска вам потребуется Docker и docker-compose
     Скачиваем проект:
     git clone https://github.com/unikox/libro_teka.git  libro_teka 
 
