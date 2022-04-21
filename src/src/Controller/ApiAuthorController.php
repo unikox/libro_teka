@@ -4,13 +4,12 @@ namespace App\Controller;
 
 use App\Entity\Author;
 use App\Service\AuthorService;
-use Doctrine\ORM\EntityManagerInterface;
+use App\Service\AuthorValidatorService as ServiceAuthorValidatorService;
+use App\Service\Validators\AuthorValidatorService;
 use Symfony\Component\Routing\Annotation\Route;
-
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
-
 use Nelmio\ApiDocBundle\Annotation\Model;
 use OpenApi\Annotations as OA;
 
@@ -47,18 +46,16 @@ class ApiAuthorController extends BaseController
      * @return JsonResponse
      */
 
-    public function Create(EntityManagerInterface $em, AuthorService $authorService): JsonResponse
+    public function Create(AuthorService $authorService, AuthorValidatorService $validator): JsonResponse
     {
         $data = $this->getRequestJSON();
         $response = new JsonResponse();
         if (array_key_exists('name', $data) and array_key_exists('name', $data) and array_key_exists('middlename', $data) and array_key_exists('surname', $data)) {
-            $authorService->setOperation('create');
-            //Валидация 
-            $validate = $authorService->Validate($response, $data);
+            $validate = $validator->ValidateCreate($data);
             if ($validate['res']) {
                 unset($validate);
                 //Проверка на уникальность и запись в бд
-                $create = $authorService->Create($em, $response, $data);
+                $create = $authorService->Create($data);
                 if ($create['res']) {
                     $response->setStatusCode(200);
                     $response->setData(['message' => 'Success']);
@@ -107,17 +104,17 @@ class ApiAuthorController extends BaseController
      * )
      */
 
-    public function Update(EntityManagerInterface $em, Request $request, AuthorService $authorService): JsonResponse
+    public function Update(AuthorService $authorService, AuthorValidatorService $validator): JsonResponse
     {
         $data = $this->getRequestJSON();
         $response = new JsonResponse();
         //Валидация 
         if (array_key_exists('id', $data) and array_key_exists('name', $data) and array_key_exists('name', $data) and array_key_exists('middlename', $data) and array_key_exists('surname', $data)) {
-            $authorService->setOperation('update');
-            $validate = $authorService->Validate($response, $data);
+            $validate = $validator->ValidateUpdate($data);
+            //$validate = $authorService->Validate($data);
             if ($validate['res']) {
                 //Проверка на уникальность и запись в бд
-                $update = $authorService->Update($em, $response, $data);
+                $update = $authorService->Update($data);
                 if ($update['res']) {
                     $response->setStatusCode(200);
                     $response->setData(['message' => 'Success']);
@@ -145,15 +142,13 @@ class ApiAuthorController extends BaseController
      *
      * @return JsonResponse
      */
-    public function Read(Request $request, EntityManagerInterface $em, AuthorService $authorService): JsonResponse
+    public function Read(Request $request,  AuthorService $authorService, AuthorValidatorService $validator): JsonResponse
     {
-
-        $authorService->setOperation('read');
         $response = new JsonResponse();
-        $validate = $authorService->Validate($response, $request);
+        // $validate = $authorService->Validate($request);
+        $validate = $validator->ValidateRead($request);
         if ($validate['res']) {
-            $read = $authorService->Read($em, $response, $request);
-
+            $read = $authorService->Read($request);
             if ($read['res']) {
                 $response->setStatusCode(200);
                 $response->setData($read['res']);
@@ -193,17 +188,15 @@ class ApiAuthorController extends BaseController
      * @return JsonResponse
      */
 
-    public function Delete(EntityManagerInterface $em, AuthorService $authorService): JsonResponse
-
+    public function Delete(AuthorService $authorService, AuthorValidatorService $validator): JsonResponse
     {
         $response = new JsonResponse();
         $data = $this->getRequestJSON();
         if (array_key_exists('id', $data)) {
             //Валидация 
-            $authorService->setOperation('delete');
-            $validate = $authorService->Validate($response, $data);
+            $validate = $validator->ValidateDelete($data);
             if ($validate['res']) {
-                $delete = $authorService->Delete($em, $response, $data);
+                $delete = $authorService->Delete($data);
                 if ($delete['res']) {
                     $response->setStatusCode(200);
                     $response->setData(['message' => 'Success']);

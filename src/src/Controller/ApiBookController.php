@@ -4,13 +4,11 @@ namespace App\Controller;
 
 use App\Entity\Book;
 use App\Service\BookService;
-use Doctrine\ORM\EntityManagerInterface;
+use App\Service\Validators\BookValidatorService;
 use Symfony\Component\Routing\Annotation\Route;
-
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
-
 use Nelmio\ApiDocBundle\Annotation\Model;
 use OpenApi\Annotations as OA;
 
@@ -46,17 +44,16 @@ class ApiBookController extends BaseController
      *
      * @return JsonResponse
      */
-    public function Create(EntityManagerInterface $em, BookService $bookService): JsonResponse
+    public function Create(BookService $bookService, BookValidatorService $bookValidator): JsonResponse
     {
         $data = $this->getRequestJSON();
         $response = new JsonResponse();
         if (array_key_exists('name', $data) and array_key_exists('author', $data)) {
-            $bookService->setOperation('create');
             //Валидация 
-            $validate = $bookService->Validate($response, $data);
+            $validate = $bookValidator->ValidateCreate($data);
             if ($validate['res']) {
                 //Проверка на уникальность и запись в бд
-                $create = $bookService->Create($em, $response, $data);
+                $create = $bookService->Create($data);
                 if ($create['res']) {
                     $response->setStatusCode(200);
                     $response->setData(['message' => 'Success']);
@@ -104,17 +101,16 @@ class ApiBookController extends BaseController
      * )
      */
 
-    public function Update(EntityManagerInterface $em, Request $request, BookService $bookService): JsonResponse
+    public function Update(BookService $bookService, BookValidatorService $bookValidator): JsonResponse
     {
         $data = $this->getRequestJSON();
         $response = new JsonResponse();
         if (array_key_exists('id', $data) and array_key_exists('name', $data) and array_key_exists('author', $data)) {
             //Валидация 
-            $bookService->setOperation('update');
-            $validate = $bookService->Validate($response, $data);
+            $validate = $bookValidator->ValidateUpdate($data);
             if ($validate['res']) {
                 //Проверка на уникальность и запись в бд
-                $update = $bookService->Update($em, $response, $data);
+                $update = $bookService->Update($data);
                 if ($update['res']) {
                     $response->setStatusCode(200);
                     $response->setData(['message' => 'Success']);
@@ -127,7 +123,6 @@ class ApiBookController extends BaseController
             $response->setStatusCode(422);
             $response->setData(['message' => 'Not enough parameters']);
         }
-
         return $response;
     }
 
@@ -147,15 +142,12 @@ class ApiBookController extends BaseController
      *
      * @return JsonResponse
      */
-    public function Read(Request $request, EntityManagerInterface $em, BookService $bookService): JsonResponse
+    public function Read(Request $request,  BookService $bookService, BookValidatorService $bookValidator): JsonResponse
     {
-
-        $bookService->setOperation('read');
         $response = new JsonResponse();
-        $validate = $bookService->Validate($response, $request);
+        $validate = $bookValidator->ValidateRead($request);
         if ($validate['res']) {
-            $read = $bookService->Read($em, $response, $request);
-
+            $read = $bookService->Read($request);
             if ($read['res']) {
                 $response->setStatusCode(200);
                 $response->setData($read['res']);
@@ -195,18 +187,18 @@ class ApiBookController extends BaseController
      * @return JsonResponse
      */
 
-    public function Delete(EntityManagerInterface $em, BookService $bookService): JsonResponse
+    public function Delete(BookService $bookService, BookValidatorService $bookValidator): JsonResponse
 
     {
         $response = new JsonResponse();
         $data = $this->getRequestJSON();
         if (array_key_exists('id', $data)) {
             //Валидация 
-            $bookService->setOperation('delete');
-            $validate = $bookService->Validate($response, $data);
+
+            $validate = $bookValidator->ValidateDelete($data);
             if ($validate['res']) {
                 //Проверка на уникальность и запись в бд
-                $delete = $bookService->Delete($em, $response, $data);
+                $delete = $bookService->Delete($data);
                 if ($delete['res']) {
                     $response->setStatusCode(200);
                     $response->setData(['message' => 'Success']);
@@ -236,12 +228,12 @@ class ApiBookController extends BaseController
      *
      * @return JsonResponse
      */
-    public function Search(Request $request, EntityManagerInterface $em, BookService $bookService): JsonResponse
+    public function Search(Request $request,  BookService $bookService): JsonResponse
     {
 
-        $bookService->setOperation('search');
+
         $response = new JsonResponse();
-        $search = $bookService->Search($em, $response, $request);
+        $search = $bookService->Search($request);
 
         if ($search['res']) {
             $response->setStatusCode(200);
