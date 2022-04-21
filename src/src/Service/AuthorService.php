@@ -4,13 +4,8 @@ namespace App\Service;
 
 use App\Entity\Author;
 use App\Entity\Book;
-use Symfony\Component\Validator\Constraints\Length;
-use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Component\Validator\Constraints\Type;
-use Symfony\Component\Validator\Validation;
 use App\Interfaces\CrudInterface;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 class AuthorService implements CrudInterface

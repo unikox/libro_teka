@@ -2,9 +2,8 @@
 
 namespace App\Controller;
 
-use App\Entity\Author;
+
 use App\Service\AuthorService;
-use App\Service\AuthorValidatorService as ServiceAuthorValidatorService;
 use App\Service\Validators\AuthorValidatorService;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
