@@ -42,8 +42,15 @@ Demo API
         то можно перенастроить в файле ./libro_teka/local/xdebug.ini 
         xdebug.client_host = адрес вашего хоста
         xdebug.client_port = порт для входящих соединений отладчика
-        xdebug.idekey =  для указания среды разработки VSCODE или PHPSHTORM 
+        xdebug.idekey =  для указания среды разработки VSCODE или PHPSHTORM
 
+        для корректной работы отладчика необходимо так же внести изменения в файл launch.json:
+        {папка с проектом}/.vscode/launch.json
+         нужно указать полный локальный путь до дириктории с symfony
+                    "pathMappings": {
+                "/var/www": "/полный/путь/src",
+
+              }
 
 Остановка
     Для остановки проекта выполните: 
